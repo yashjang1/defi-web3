@@ -7,4 +7,8 @@ contract TokenA is ERC20 {
     constructor() ERC20("College Token A", "CTA") {
         _mint(msg.sender, 1000000 * 10 ** decimals());
     }
+
+    function mint() public {
+        _mint(msg.sender, 1000 * 10 ** decimals());
+    }
 }

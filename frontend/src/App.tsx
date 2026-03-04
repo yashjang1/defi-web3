@@ -10,8 +10,8 @@ function App() {
   const [isConnecting, setIsConnecting] = useState(false);
 
   const checkConnection = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      const provider = new ethers.BrowserProvider(window.ethereum as any);
+    if (typeof (window as any).ethereum !== 'undefined') {
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
       const accounts = await provider.listAccounts();
       if (accounts.length > 0) {
         setAccount(accounts[0].address);
@@ -22,8 +22,8 @@ function App() {
   useEffect(() => {
     checkConnection();
 
-    if (typeof window.ethereum !== 'undefined') {
-      (window.ethereum as any).on('accountsChanged', (accounts: string[]) => {
+    if (typeof (window as any).ethereum !== 'undefined') {
+      ((window as any).ethereum).on('accountsChanged', (accounts: string[]) => {
         if (accounts.length > 0) {
           setAccount(accounts[0]);
         } else {
@@ -34,10 +34,10 @@ function App() {
   }, []);
 
   const connectWallet = async () => {
-    if (typeof window.ethereum !== 'undefined') {
+    if (typeof (window as any).ethereum !== 'undefined') {
       try {
         setIsConnecting(true);
-        const provider = new ethers.BrowserProvider(window.ethereum as any);
+        const provider = new ethers.BrowserProvider((window as any).ethereum);
         const accounts = await provider.send("eth_requestAccounts", []);
         if (accounts.length > 0) {
           setAccount(accounts[0]);
