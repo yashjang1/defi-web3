@@ -23,6 +23,7 @@ export default function Swap({ account }: SwapProps) {
     const [tokenB, setTokenB] = useState('');
     const [isSwapping, setIsSwapping] = useState(false);
     const [isMinting, setIsMinting] = useState(false);
+    const [mintStatus, setMintStatus] = useState("Claim 1000 Free A & B");
     const [isReversed, setIsReversed] = useState(false);
 
     const toggleReverse = () => {
@@ -75,18 +76,25 @@ export default function Swap({ account }: SwapProps) {
             const tokenAContract = new ethers.Contract(contracts.TokenA, ERC20_ABI, signer);
             const tokenBContract = new ethers.Contract(contracts.TokenB, ERC20_ABI, signer);
 
+            setMintStatus("Confirm Token A...");
             const txA = await tokenAContract.mint();
+
+            setMintStatus("Mining Token A...");
             await txA.wait();
 
+            setMintStatus("Confirm Token B...");
             const txB = await tokenBContract.mint();
+
+            setMintStatus("Mining Token B...");
             await txB.wait();
 
             alert(`✅ Successfully minted A and B!`);
         } catch (error: any) {
             console.error(error);
-            alert(`Minting failed: ${error.message || "Does your token contract have a public mint() function?"}`);
+            alert(`Minting failed: ${error.message || "Something went wrong"}`);
         }
         setIsMinting(false);
+        setMintStatus("Claim 1000 Free A & B");
     };
 
     const addTokenToWallet = async (address: string, symbol: string) => {
@@ -268,7 +276,7 @@ export default function Swap({ account }: SwapProps) {
                             style={{ background: 'transparent', border: '1px solid #a78bfa', color: '#a78bfa', padding: '8px 16px', fontSize: '0.9rem', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
                         >
                             {isMinting && <div style={{ width: '14px', height: '14px', border: '2px solid #a78bfa', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>}
-                            Claim 1000 Free A & B
+                            {mintStatus}
                         </button>
                         <div style={{ display: 'flex', gap: '12px', fontSize: '0.8rem', marginTop: '8px' }}>
                             <button className="glass-panel" onClick={() => addTokenToWallet(contracts.TokenA, "A")} style={{ border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}>
