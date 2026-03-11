@@ -13,13 +13,15 @@ contract SimpleSwap {
         tokenB = IERC20(_tokenB);
     }
 
-    function swapAforB(uint amount) public {
-        tokenA.transferFrom(msg.sender, address(this), amount);
-        tokenB.transfer(msg.sender, amount);
+    function swapAforB(uint amountA) public {
+        uint amountB = (amountA * 98) / 100;
+        require(tokenA.transferFrom(msg.sender, address(this), amountA), "Transfer A failed");
+        require(tokenB.transfer(msg.sender, amountB), "Transfer B failed");
     }
 
-    function swapBforA(uint amount) public {
-        tokenB.transferFrom(msg.sender, address(this), amount);
-        tokenA.transfer(msg.sender, amount);
+    function swapBforA(uint amountB) public {
+        uint amountA = (amountB * 100) / 98;
+        require(tokenB.transferFrom(msg.sender, address(this), amountB), "Transfer B failed");
+        require(tokenA.transfer(msg.sender, amountA), "Transfer A failed");
     }
 }
